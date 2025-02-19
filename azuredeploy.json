@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "metadata": {
         "title": "AS-Datadog-Events-Integration", 
-        "description": "This playbook is intended to be run on a timmed trigger. It will poll Datadog for new alerts and replicate them in Sentinel",
+        "description": "This playbook is intended to be run on a timmed trigger. It will poll Datadog for new events and replicate them in Sentinel",
         "preDeployment": ["Azure Keyvault Secret"],
         "postDeployment": ["Access to the Azure Key Vault must be granted to the playbook"],
         "lastUpdateTime": "2025-01-06T17:48:00Z",
@@ -23,16 +23,10 @@
                 "description": "Name of the Logic App resource to be created"
             }
         },
-        "ClientID": {
-            "type": "string",
-            "metadata" : {
-                "description" : "Enter the Client ID for your Datadog API"
-            }
-        },
         "KeyVaultName": {
             "type": "string",
             "metadata" : {
-                "description" : "Name of the Key Vault that stores the Datadog API key"
+                "description": "Name of the Key Vault that stores the Datadog API key"
             }
         },
         "APIKeySecretName": {
@@ -162,52 +156,71 @@
                             "inputs": "@join(body('Select_IDs'), '\", \"')"
                         },
                         "Condition_-_Check_for_Results": {
+                            "type": "If",
+                            "expression": {
+                                "and": [
+                                    {
+                                        "not": {
+                                            "equals": [
+                                                "@outputs('Compose_-_IDs_String_Values')",
+                                                ""
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
                             "actions": {
                                 "For_each_-_Event": {
+                                    "type": "Foreach",
                                     "foreach": "@body('HTTP_-_Get_Events')?['data']",
                                     "actions": {
-                                        "Condition": {
-                                            "actions": {
-                                                "Send_Data": {
-                                                    "runAfter": {},
-                                                    "type": "ApiConnection",
-                                                    "inputs": {
-                                                        "body": "@{items('For_each_-_Event')}",
-                                                        "headers": {
-                                                            "Log-Type": "Datadog_Events"
-                                                        },
-                                                        "host": {
-                                                            "connection": {
-                                                                "name": "@parameters('$connections')['azureloganalyticsdatacollector']['connectionId']"
-                                                            }
-                                                        },
-                                                        "method": "post",
-                                                        "path": "/api/logs"
-                                                    }
-                                                }
-                                            },
-                                            "runAfter": {},
+                                        "Condition_-_Check_for_Duplicates": {
+                                            "type": "If",
                                             "expression": {
                                                 "and": [
                                                     {
                                                         "not": {
                                                             "contains": [
-                                                                "@body('Select')",
+                                                                "@body('Select_-_IDs')",
                                                                 "@items('For_each_-_Event')?['id']"
                                                             ]
                                                         }
                                                     }
                                                 ]
                                             },
-                                            "type": "If"
+                                            "actions": {},
+                                            "else": {
+                                                "actions": {}
+                                            },
+                                            "runAfter": {
+                                                "Send_Data": [
+                                                    "SUCCEEDED"
+                                                ]
+                                            }
+                                        },
+                                        "Send_Data": {
+                                            "type": "ApiConnection",
+                                            "inputs": {
+                                                "host": {
+                                                    "connection": {
+                                                        "name": "@parameters('$connections')['azureloganalyticsdatacollector']['connectionId']"
+                                                    }
+                                                },
+                                                "method": "post",
+                                                "body": "@{items('For_each_-_Event')}",
+                                                "headers": {
+                                                    "Log-Type": "Datadog_Events"
+                                                },
+                                                "path": "/api/logs"
+                                            }
                                         }
                                     },
                                     "runAfter": {
-                                        "Select": [
-                                            "Succeeded"
+                                        "Select_-_IDs": [
+                                            "Succeeded",
+                                            "FAILED"
                                         ]
-                                    },
-                                    "type": "Foreach"
+                                    }
                                 },
                                 "Run_query_and_list_results_V2": {
                                     "runAfter": {},
@@ -236,37 +249,28 @@
                                         }
                                     }
                                 },
-                                "Select": {
-                                    "runAfter": {
-                                        "Run_query_and_list_results_V2": [
-                                            "Succeeded"
-                                        ]
-                                    },
+                                "Select_-_IDs": {
                                     "type": "Select",
                                     "inputs": {
                                         "from": "@body('Run_query_and_list_results_V2')?['value']",
                                         "select": "@item()?['id_s']"
+                                    },
+                                    "runAfter": {
+                                        "Run_query_and_list_results_V2": [
+                                            "Succeeded",
+                                            "FAILED"
+                                        ]
                                     }
                                 }
+                            },
+                            "else": {
+                                "actions": {}
                             },
                             "runAfter": {
                                 "Compose_-_IDs_String_Values": [
                                     "Succeeded"
                                 ]
-                            },
-                            "expression": {
-                                "and": [
-                                    {
-                                        "not": {
-                                            "equals": [
-                                                "@outputs('Compose_-_IDs_String_Values')",
-                                                ""
-                                            ]
-                                        }
-                                    }
-                                ]
-                            },
-                            "type": "If"
+                            }
                         },
                         "HTTP_-_Get_Events": {
                             "runAfter": {
