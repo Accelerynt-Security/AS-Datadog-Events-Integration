@@ -19,7 +19,7 @@ This playbook will create a unidirectional integration with Microsoft Sentinel. 
                                                                                                                                      
 The following items are required under the template settings during deployment: 
 
-* **Datadog App and OAuth Client** - A Datadog app and OAuth client will be required to access your Datadog data from Microsoft, please reference the Datadog documentation for set up. [Documentation link](https://docs.datadoghq.com/developers/integrations/oauth_for_integration)
+* **Datadog App and OAuth Client** - A Datadog app and OAuth client will be required to access your Datadg data from Microsoft, please reference the Datadog documentation for set up. [Documentation link](https://docs.datadoghq.com/developers/integrations/oauth_for_integration)
 * **Datadog Application Key** - [Documentation link](https://docs.datadoghq.com/developers/integrations/oauth_for_integration)
 * **Datadog API Key** - [Documentation link](https://docs.datadoghq.com/developers/integrations/oauth_for_integrations/#create-an-api-key)
 * **Datadog Domain** - [Documentation link](https://docs.datadoghq.com/developers/integrations/oauth_for_integrations/#cross-regional-support)
@@ -52,6 +52,7 @@ Repeat this process for the Application Key, using a name such as "**AS-Datadog-
 Once the secrets have been added to the vault, navigate to the "**Access policies**" menu option, also found under the "**Settings**" section on the Key Vault page menu. Leave this page open, as you will need to return to it once the playbook has been deployed. See [Granting Access to Azure Key Vault](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#granting-access-to-azure-key-vault).
 
 ![Datadog_Integration_Key_Vault_4](Images/Datadog_Integration_Key_Vault_4.png)
+
 
 #### Log Analytics Workspace
 
@@ -141,7 +142,7 @@ From the playbook overview page, navigate to **API connections** from the left m
 
 ![Datadog_Integration_API_Connections_1](Images/Datadog_Integration_API_Connections_1.png)
 
-Click the **azureloganalyticsdatacollector** connection and click **Edit API connection**. Enter your Workspace ID and key, then click **Save**.
+Click the **azureloganalyticsdatacollector** connection and click **Edit API connection**. Enter in your Workspace ID and key, then click **Save**.
 
 ![Datadog_Integration_API_Connections_2](Images/Datadog_Integration_API_Connections_2.png)
 
@@ -163,7 +164,7 @@ To execute the initial run, **enable** the logic app. The trigger will run autom
 
 ![Datadog_Integration_Initial_Run_1](Images/Datadog_Integration_Initial_Run_1.png)
 
-Click on the run and check for a successful **Send data** operation in the **For each - Event** step. Once you see this, **disable the logic app**. 
+Click on the run and check for a successful **Send data** operation in the **For each - Event** step. The run does not need to succeed for this step to be completed. Once you see this, **disable the logic app**. 
 
 ![Datadog_Integration_Initial_Run_2](Images/Datadog_Integration_Initial_Run_2.png)
 
@@ -192,13 +193,15 @@ Lastly, the **Send Data** step needs to be dragged into the **True** fork of the
 
 ![Datadog_Integration_Initial_Run_8](Images/Datadog_Integration_Initial_Run_8.png)
 
+![Datadog_Integration_Initial_Run_9](Images/Datadog_Integration_Initial_Run_9.png)
+
 Click **Save**.
 
-![Datadog_Integration_Initial_Run_9](Images/Datadog_Integration_Initial_Run_9.png)
+![Datadog_Integration_Initial_Run_10](Images/Datadog_Integration_Initial_Run_10.png)
 
 The [last section](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#viewing-custom-logs) outlines how to view the custom logs to ensure they have been properly populated. After confirming the table has been created, go ahead and enable the Logic App.
 
-![Datadog_Integration_Initial_Run_10](Images/Datadog_Integration_Initial_Run_10.png)
+![Datadog_Integration_Initial_Run_11](Images/Datadog_Integration_Initial_Run_11.png)
 
 #
 ### Viewing Custom Logs
