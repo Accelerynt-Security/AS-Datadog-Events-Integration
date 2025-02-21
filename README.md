@@ -19,10 +19,11 @@ This playbook will create a unidirectional integration with Microsoft Sentinel. 
                                                                                                                                      
 The following items are required under the template settings during deployment: 
 
-* **Datadog Domain** - the domain of the base URL indicated on the Datadog OAuth client page. [Documentation link](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#Create-a-Datadog-Application
-* **Datadog Client ID** - the Client ID the Datadog OAuth client. [Documentation link](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#Create-a-Datadog-Application
-* **Datadog API token** - the value of the API token generated for the Datadog OAuth client. [Documentation link](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#Create-a-Datadog-Application
-* **Azure Key Vault Secret** - this will store the Datadog API token. [Documentation link](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#create-an-azure-key-vault-secret).
+* **Datadog App and OAuth Client** - A Datadog app and OAuth client will be required to access your Datadog data from Microsoft, please reference the Datadog documentation for set up. [Documentation link](https://docs.datadoghq.com/developers/integrations/oauth_for_integration)
+* **Datadog Application Key** - [Documentation link](https://docs.datadoghq.com/developers/integrations/oauth_for_integration)
+* **Datadog API Key** - [Documentation link](https://docs.datadoghq.com/developers/integrations/oauth_for_integrations/#create-an-api-key)
+* **Datadog Domain** - [Documentation link](https://docs.datadoghq.com/developers/integrations/oauth_for_integrations/#cross-regional-support)
+* **Azure Key Vault Secret** - This will be used to store both your Datadog API Key and App Key. [Documentation link](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#create-azure-key-vault-secrets).
 * **Sentinel Resource Name** - the name of the Log Analytics Workspace that the Datadog logs will be sent to. [Documentation link](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#Log-Analytics-Workspace).
 * **Sentinel Logs Workspace ID & Key** - the workspace ID and primary key of the Log Analytics Workspace that the Datadog logs will be sent to. [Documentation link](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#Log-Analytics-Workspace).
 
@@ -32,22 +33,19 @@ The following items are required under the template settings during deployment:
 # 
 ### Setup
 
-#### Create a Datadog Application
-
-
 #### Create Azure Key Vault Secrets
 
-Navigate to the Azure Key Vaults page: https://portal.azure.com/#view/HubsExtension/BrowseResource/resourceType/Microsoft.KeyVault%2Fvaults.
+After setting up your Datadog App and OAuth Client, navigate to the Azure Key Vaults page: https://portal.azure.com/#view/HubsExtension/BrowseResource/resourceType/Microsoft.KeyVault%2Fvaults.
 
 Navigate to an existing Key Vault or create a new one. From the Key Vault overview page, click the "**Secrets**" menu option, found under the "**Settings**" section. Click "**Generate/Import**".
 
 ![Datadog_Integration_Key_Vault_1](Images/Datadog_Integration_Key_Vault_1.png)
 
-Choose a name for the secret that will store the API Key, such as "**AS-Datadog-Events-Integration-API-Key**", and enter the Datadog API Key copied previously in the [previous section](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#Create-a-Datadog-Application. All other settings can be left as is. Click "**Create**". 
+Choose a name for the secret that will store the API Key, such as "**AS-Datadog-Events-Integration-API-Key**", and enter the Datadog API Key copied previously in the [previous section](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#Create-a-Datadog-Application). All other settings can be left as is. Click "**Create**". 
 
 ![Datadog_Integration_Key_Vault_2](Images/Datadog_Integration_Key_Vault_2.png)
 
-Repeat this process for the Application Key, using a name such as "**AS-Datadog-Events-Integration-Application-Key**", and enter the Datadog Application Key copied previously in the [previous section](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#Create-a-Datadog-Application. All other settings can be left as is. Click "**Create**". 
+Repeat this process for the Application Key, using a name such as "**AS-Datadog-Events-Integration-Application-Key**", and enter the Datadog Application Key copied previously in the [previous section](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#Create-a-Datadog-Application). All other settings can be left as is. Click "**Create**". 
 
 ![Datadog_Integration_Key_Vault_3](Images/Datadog_Integration_Key_Vault_3.png)
 
@@ -88,11 +86,13 @@ In the **Instance details** section:
                                                   
 * **Playbook Name**: This can be left as "**AS-Datadog-Events-Integration**" or you may change it.
 
-* **Key Vault Name**: Enter the name of the key vault referenced in [Create an Azure Key Vault Secret](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#create-an-azure-key-vault-secret).
+* **Datadog Domain**: Enter the domain of the Datadog base URL, following the format of 'api.Datadog.com' referenced in the [Datadog documentation](https://docs.datadoghq.com/developers/integrations/oauth_for_integrations/#cross-regional-support).
 
-* **API Key Secret Name**: Enter the name of the API key vault Secret created in [Create an Azure Key Vault Secret](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#create-an-azure-key-vault-secret).
+* **Key Vault Name**: Enter the name of the key vault referenced in [Create Azure Key Vault Secrets](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#create-azure-key-vault-secrets).
 
-* **Applications Key Secret Name**: Enter the name of the Application key vault Secret created in [Create an Azure Key Vault Secret](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#create-an-azure-key-vault-secret).
+* **API Key Secret Name**: Enter the name of the API key vault Secret created in [Create Azure Key Vault Secrets](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#create-azure-key-vault-secrets).
+
+* **Applications Key Secret Name**: Enter the name of the Application key vault Secret created in [Create Azure Key Vault Secrets](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#create-azure-key-vault-secrets).
 
 * **Sentinel Resource Name**: Enter the name of the Microsoft Sentinel Resource you will be sending the logs to referenced in [Log Analytics Workspace](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#Log-Analytics-Workspace).
 
@@ -141,7 +141,7 @@ From the playbook overview page, navigate to **API connections** from the left m
 
 ![Datadog_Integration_API_Connections_1](Images/Datadog_Integration_API_Connections_1.png)
 
-Click the **azureloganalyticsdatacollector** connection and click **Edit API connection**. Enter in your Workspace ID and key, then click **Save**.
+Click the **azureloganalyticsdatacollector** connection and click **Edit API connection**. Enter your Workspace ID and key, then click **Save**.
 
 ![Datadog_Integration_API_Connections_2](Images/Datadog_Integration_API_Connections_2.png)
 
@@ -163,14 +163,14 @@ To execute the initial run, **enable** the logic app. The trigger will run autom
 
 ![Datadog_Integration_Initial_Run_1](Images/Datadog_Integration_Initial_Run_1.png)
 
-Click on the run and check for a successful **Send data** operation in the final step. Once you see this, **disable the logic app**. 
+Click on the run and check for a successful **Send data** operation in the **For each - Event** step. Once you see this, **disable the logic app**. 
 
 ![Datadog_Integration_Initial_Run_2](Images/Datadog_Integration_Initial_Run_2.png)
 
 ![Datadog_Integration_Initial_Run_3](Images/Datadog_Integration_Initial_Run_3.png)
 
 > [!NOTE]  
-> If no data was returned for the 10 minute lookback window, allow the playbook to run until this condition is met. To expedite this, you can increase the lookback window by navigating to the **Logic app designer** adjusting the **addMinutes** function in the **HTTP - Get Alert IDs** step. The larger the negative number, the further the lookback. Be sure click **Update** if you change the formula, followed by **Save**.
+> If no data was returned for the 10 minute lookback window, allow the playbook to run until this condition is met. To expedite this, you can increase the lookback window by navigating to the **Logic app designer** adjusting the **addMinutes** function in the **Initialize variable - Unix Start Time** step. The larger the negative number, the further the lookback. Be sure click **Update** if you change the formula, followed by **Save**.
 
 ![Datadog_Integration_Initial_Run_4](Images/Datadog_Integration_Initial_Run_4.png)
 
@@ -180,21 +180,25 @@ Once the Logic App has been disabled, navigate to the **Logic app designer** pag
 
 There are two steps that have a **Run after: has failed** checkbox that needs to be unchecked. 
 
-Expand the step **For each - Sentinel Logs Alert IDs** and under settings, uncheck the **has failed** checkbox.
+Expand the step **Select - IDs** and under settings, uncheck the **has failed** checkbox.
 
 ![Datadog_Integration_Initial_Run_6](Images/Datadog_Integration_Initial_Run_6.png)
 
-Repeat this step for the **HTTP - Get Complete events** step.
+Repeat this step for the **For each - Event** step.
 
 ![Datadog_Integration_Initial_Run_7](Images/Datadog_Integration_Initial_Run_7.png)
 
-Click **Save**.
+Lastly, the **Send Data** step needs to be dragged into the **True** fork of the **Condition - Check for Duplicates** step.
 
 ![Datadog_Integration_Initial_Run_8](Images/Datadog_Integration_Initial_Run_8.png)
 
-The [last section](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#viewing-custom-logs) outlines how to view the custom logs to ensure they have been properly populated. After confirming the table has been created, go ahead and enable the Logic App.
+Click **Save**.
 
 ![Datadog_Integration_Initial_Run_9](Images/Datadog_Integration_Initial_Run_9.png)
+
+The [last section](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#viewing-custom-logs) outlines how to view the custom logs to ensure they have been properly populated. After confirming the table has been created, go ahead and enable the Logic App.
+
+![Datadog_Integration_Initial_Run_10](Images/Datadog_Integration_Initial_Run_10.png)
 
 #
 ### Viewing Custom Logs
