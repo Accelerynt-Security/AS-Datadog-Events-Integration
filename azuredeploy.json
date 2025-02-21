@@ -23,6 +23,12 @@
                 "description": "Name of the Logic App resource to be created"
             }
         },
+        "DatadogDomain": {
+            "type": "string",
+            "metadata" : {
+                "description": "Enter the domain of your Datadog base URL, following the format of 'api.datadoghq.com'"
+            }
+        },
         "KeyVaultName": {
             "type": "string",
             "metadata" : {
@@ -286,7 +292,7 @@
                                     "DD-APPLICATION-KEY": "@{body('Get_Secret_-_Application_Key')?['value']}"
                                 },
                                 "method": "GET",
-                                "uri": "https://api.datadoghq.com/api/v2/events?filter[from]=@{variables('Unix Start Time')}&filter[to]=@{variables('Unix End Time')}"
+                                "uri": "[concat('https://', parameters('DatadogDomain'), '/api/v2/events?filter[from]=@{variables(''Unix Start Time'')}&filter[to]=@{variables(''Unix End Time'')}')]"
                             },
                             "runtimeConfiguration": {
                                 "contentTransfer": {
