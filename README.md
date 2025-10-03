@@ -19,7 +19,7 @@ This playbook will create a unidirectional integration with Microsoft Sentinel. 
                                                                                                                                      
 The following items are required under the template settings during deployment: 
 
-* **Datadog App and OAuth Client** - A Datadog app and OAuth client will be required to access your Datadg data from Microsoft, please reference the Datadog documentation for set up. [Documentation link](https://docs.datadoghq.com/developers/integrations/oauth_for_integration)
+* **Datadog App and OAuth Client** - A Datadog app and OAuth client will be required to access your Datadog data from Microsoft, please reference the Datadog documentation for set up. [Documentation link](https://docs.datadoghq.com/developers/integrations/oauth_for_integration)
 * **Datadog Application Key** - [Documentation link](https://docs.datadoghq.com/developers/integrations/oauth_for_integration)
 * **Datadog API Key** - [Documentation link](https://docs.datadoghq.com/developers/integrations/oauth_for_integrations/#create-an-api-key)
 * **Datadog Domain** - [Documentation link](https://docs.datadoghq.com/developers/integrations/oauth_for_integrations/#cross-regional-support)
@@ -87,13 +87,13 @@ In the **Instance details** section:
                                                   
 * **Playbook Name**: This can be left as "**AS-Datadog-Events-Integration**" or you may change it.
 
-* **Datadog Domain**: Enter the domain of the Datadog base URL, following the format of 'api.Datadog.com' referenced in the [Datadog documentation](https://docs.datadoghq.com/developers/integrations/oauth_for_integrations/#cross-regional-support).
+* **Datadog Domain**: Enter the domain of the Datadog base URL, following the format of 'api.datadog.com' referenced in the [Datadog documentation](https://docs.datadoghq.com/developers/integrations/oauth_for_integrations/#cross-regional-support).
 
 * **Key Vault Name**: Enter the name of the key vault referenced in [Create Azure Key Vault Secrets](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#create-azure-key-vault-secrets).
 
 * **API Key Secret Name**: Enter the name of the API key vault Secret created in [Create Azure Key Vault Secrets](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#create-azure-key-vault-secrets).
 
-* **Applications Key Secret Name**: Enter the name of the Application key vault Secret created in [Create Azure Key Vault Secrets](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#create-azure-key-vault-secrets).
+* **Application Key Secret Name**: Enter the name of the Application key vault Secret created in [Create Azure Key Vault Secrets](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#create-azure-key-vault-secrets).
 
 * **Sentinel Resource Name**: Enter the name of the Microsoft Sentinel Resource you will be sending the logs to referenced in [Log Analytics Workspace](https://github.com/Accelerynt-Security/AS-Datadog-Events-Integration#Log-Analytics-Workspace).
 
